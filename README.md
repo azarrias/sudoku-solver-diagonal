@@ -1,6 +1,3 @@
-# sudoku-solver
-AI agent that solves Sudoku boards
-
 # Solve Sudoku with AI
 AI agent that solves diagonal Sudoku boards
 
