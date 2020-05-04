@@ -27,7 +27,8 @@ def eliminate(values):
     for box in solved_boxes:
         value = values[box]
         for peer in peers[box]:
-            values[peer] = values[peer].replace(value, '')
+            #values[peer] = values[peer].replace(value, '')
+            values = assign_value(values, peer, values[peer].replace(value, ''))
     return values
 
 def only_choice(values):
@@ -50,7 +51,8 @@ def only_choice(values):
         for digit in "123456789":
             occurrences = [box for box in unit if digit in values[box]]
             if len(occurrences) == 1:
-                values[occurrences[0]] = digit
+                #values[occurrences[0]] = digit
+                values = assign_value(values, occurrences[0], digit)
     return values
 
 def reduce_puzzle(values):
@@ -111,7 +113,8 @@ def search(values):
     # Now use recursion to solve each one of the resulting sudokus, and if one returns a value (not False), return that answer!
     for value in values[s]:
         new_values = values.copy()
-        new_values[s] = value
+        #new_values[s] = value
+        new_values = assign_value(new_values, s, value)
         result = search(new_values)
         if result:
             return result
