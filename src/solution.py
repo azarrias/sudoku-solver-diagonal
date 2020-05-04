@@ -55,6 +55,47 @@ def only_choice(values):
                 values = assign_value(values, occurrences[0], digit)
     return values
 
+def naked_twins(values):
+    """Eliminate values using the naked twins strategy.
+    The naked twins strategy says that if you have two or more unallocated boxes
+    in a unit and there are only two digits that can go in those two boxes, then
+    those two digits can be eliminated from the possible assignments of all other
+    boxes in the same unit.
+    Parameters
+    ----------
+    values(dict)
+        a dictionary of the form {'box_name': '123456789', ...}
+    Returns
+    -------
+    dict
+        The values dictionary with the naked twins eliminated from peers
+    Notes
+    -----
+    Your solution can either process all pairs of naked twins from the input once,
+    or it can continue processing pairs of naked twins until there are no such
+    pairs remaining -- the project assistant test suite will accept either
+    convention. However, it will not accept code that does not process all pairs
+    of naked twins from the original input. (For example, if you start processing
+    pairs of twins and eliminate another pair of twins before the second pair
+    is processed then your code will fail the PA test suite.)
+    The first convention is preferred for consistency with the other strategies,
+    and because it is simpler (since the reduce_puzzle function already calls this
+    strategy repeatedly).
+    """
+    for unit in unitlist:
+        result = values.copy()
+        # retrieve all unallocated boxes in this unit
+        unsolved_boxes = [box for box in unit if len(values[box]) >= 2]
+        if len(unsolved_boxes) >= 2:
+            for i in range(len(unsolved_boxes)):
+                for j in range(i + 1, len(unsolved_boxes)):
+                    if values[unsolved_boxes[i]] == values[unsolved_boxes[j]] and len(values[unsolved_boxes[i]]) == 2 and len(values[unsolved_boxes[j]]) == 2:
+                        # for each peer in this unit, remove the naked twins values
+                        for k in [x for x in range(len(unsolved_boxes)) if x != i and x != j]:
+                            for digit in values[unsolved_boxes[i]]:
+                                result = assign_value(result, unsolved_boxes[k], result[unsolved_boxes[k]].replace(digit, ''))
+    return result
+
 def reduce_puzzle(values):
     """Reduce a Sudoku puzzle by repeatedly applying all constraint strategies
     Parameters
@@ -71,10 +112,12 @@ def reduce_puzzle(values):
     while not stalled:
         # Check how many boxes have a determined value
         solved_values_before = len([box for box in values.keys() if len(values[box]) == 1])
-        # Your code here: Use the Eliminate Strategy
+        # Use the Eliminate Strategy
         values = eliminate(values)
-        # Your code here: Use the Only Choice Strategy
+        # Use the Only Choice Strategy
         values = only_choice(values)
+        # Use the Naked Twins Strategy
+        values = naked_twins(values)
         # Check how many boxes have a determined value, to compare
         solved_values_after = len([box for box in values.keys() if len(values[box]) == 1])
         # If no new values were added, stop the loop.
