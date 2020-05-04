@@ -82,8 +82,8 @@ def naked_twins(values):
     and because it is simpler (since the reduce_puzzle function already calls this
     strategy repeatedly).
     """
+    result = values.copy()
     for unit in unitlist:
-        result = values.copy()
         # retrieve all unallocated boxes in this unit
         unsolved_boxes = [box for box in unit if len(values[box]) >= 2]
         if len(unsolved_boxes) >= 2:
