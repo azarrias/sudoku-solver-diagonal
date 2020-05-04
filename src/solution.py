@@ -134,8 +134,16 @@ def solve(grid):
     return values
 
 if __name__ == "__main__":
-#    sudoku_grid = '..3.2.6..9..3.5..1..18.64....81.29..7.......8..67.82....26.95..8..2.3..9..5.1.3..'
-    sudoku_grid = '4.....8.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......'
-    display(grid2values(sudoku_grid))
-    result = solve(sudoku_grid) 
+    diag_sudoku_grid = '2.............62....1....7...6..8...3...9...7...6..4...4....8....52.............3'
+    display(grid2values(diag_sudoku_grid))
+    result = solve(diag_sudoku_grid) 
     display(result)
+
+    try:
+        import PySudoku
+        PySudoku.play(grid2values(diag_sudoku_grid), result, history)
+
+    except SystemExit:
+        pass
+    except:
+        print("We could not visualize your board due to a pygame issue. Not a problem! It is not a requirement.")
